@@ -1,6 +1,13 @@
 #include <stdio.h>
+#include "lex.yy.h"
 
 int main() {
-    printf("Hello, World!\n");
-    return 0;
+    char * yytext;
+    return initLexer();
+
+    /*todo: resolver os problemas com os comentários
+     *todo: tabela de simbolos
+     *todo: erros de sintaxe
+     * */
+
 }
