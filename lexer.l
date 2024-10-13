@@ -88,7 +88,7 @@ ID [a-zA-Z]+
 }
 
 if|else|int|return|void|while {
-    printf("a keyword: %s\n", yytext);
+    //printf("a keyword: %s\n", yytext);
 
     if(strcmp(yytext, "if") == 0) return IF;
     if(strcmp(yytext, "else") == 0) return ELSE;
@@ -99,13 +99,13 @@ if|else|int|return|void|while {
 }
 
 {ID} {
-        printf("An identifier: %s\n", yytext);
+        //printf("An identifier: %s\n", yytext);
         return IDENTIFIER;
 }
 
 "<="|">="|"!="|"=="|"<"|">" {
 
-    printf("a relop: %s\n", yytext);
+    //printf("a relop: %s\n", yytext);
 
     if(strcmp(yytext, "<=") == 0) return LTE;
     if(strcmp(yytext, ">=") == 0) return GTE;
@@ -122,7 +122,7 @@ if|else|int|return|void|while {
 }
 
 "+"|"-"|"*"|"/" {
-    printf("An operator: %s\n", yytext);
+    //printf("An operator: %s\n", yytext);
 
     if(strcmp(yytext, "+") == 0) return ADD;
     if(strcmp(yytext, "-") == 0) return SUB;
@@ -131,7 +131,7 @@ if|else|int|return|void|while {
 }
 
 "("|")"|"["|"]"|"{"|"}"|","|";" {
-    printf("a delimitator: %s\n", yytext);
+    //printf("a delimitator: %s\n", yytext);
     if(strcmp(yytext, "(")) return OPEN_PAR;
     if(strcmp(yytext, ")")) return CLOSE_PAR;
     if(strcmp(yytext, "[")) return OPEN_BRAC;
@@ -142,7 +142,7 @@ if|else|int|return|void|while {
 
 "\n" {
     line++;
-    printf("line is: %i\n", line);
+    //printf("line is: %i\n", line);
     return 50;
 }
 
@@ -157,7 +157,7 @@ if|else|int|return|void|while {
 }
 
 <<EOF>> {
-            printf("fim do arquivo\n");
+            //printf("fim do arquivo\n");
             printErrors();
             yyterminate();
             return 0;
