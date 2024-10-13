@@ -66,7 +66,7 @@
 %x COMMENT
 
 NUMBER [0-9]+
-ID [a-z][a-zA-Z]*
+ID [a-zA-Z]+
 
 %%
 
