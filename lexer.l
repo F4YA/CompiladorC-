@@ -188,9 +188,9 @@ void printErrors(){
     printf("erros encontrados: %i\n", errors->cont);
 }
 
-int initLexer(){
+int initLexer(char * program){
 
-    if(!(yyin = fopen("../prg1.c-", "r"))){
+    if(!(yyin = fopen(program, "r"))){
         printf("Erro ao abrir o arquivo");
         return 1;
     }
