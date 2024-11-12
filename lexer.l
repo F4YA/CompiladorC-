@@ -4,42 +4,7 @@
     #include "lex.yy.h"
     #include <stdio.h>
     #include <stdlib.h>
-
-    #define IF 1
-    #define ELSE 2
-    #define INT 3
-    #define WHILE 4
-    #define VOID 5
-    #define RETURN 6
-
-    #define GTE 7
-    #define LTE 8
-    #define EQ 9
-    #define LT 10
-    #define GT 11
-    #define NEQ 12
-
-    #define ADD 13
-    #define SUB 14
-    #define MUL 15
-    #define DIV 16
-
-    #define IDENTIFIER 17
-
-    #define OPEN_PAR 18
-    #define CLOSE_PAR 19
-    #define OPEN_KEY 20
-    #define CLOSE_KEY 21
-    #define OPEN_BRAC 22
-    #define CLOSE_BRAC 23
-
-    #define COMMA 24
-    #define END_LINE 25
-
-    #define TS 26
-    #define NUM 27
-    #define ATR 28
-
+    #include "parser.tab.h"
 
     typedef struct error{
         int line;
@@ -56,7 +21,6 @@
     ERRORS *errors;
 
     int lastIsEq = 0;
-    int line = 0;
 
     void addError(char * token);
     void printErrors();
@@ -74,7 +38,7 @@ ID [a-zA-Z]+
 
 <COMMENT>{
     "*/"    {BEGIN(INITIAL);}
-    \n      {line++;}
+    \n      {yylineno++;}
     "/*"    {
               addError(yytext);
               return 50;
@@ -82,7 +46,7 @@ ID [a-zA-Z]+
      .       { }
      <<EOF>> {
                printErrors();
-               printf("error at line: %i unfinded: */ \n", line + 1);
+               printf("error at line: %i unfinded: */ \n", yylineno + 1);
                exit(1);
              }
 }
@@ -100,7 +64,8 @@ if|else|int|return|void|while {
 
 {ID} {
         //printf("An identifier: %s\n", yytext);
-        return IDENTIFIER;
+        yylval.strval = strdup(yytext);
+        return ID;
 }
 
 "<="|">="|"!="|"=="|"<"|">" {
@@ -118,6 +83,7 @@ if|else|int|return|void|while {
 = { return ATR; }
 
 {NUMBER} {
+          yylval.intval = atoi(yytext);
           return NUM;
 }
 
@@ -138,10 +104,12 @@ if|else|int|return|void|while {
     if(strcmp(yytext, "]")) return CLOSE_BRAC;
     if(strcmp(yytext, "{")) return OPEN_KEY;
     if(strcmp(yytext, "}")) return CLOSE_KEY;
+    if(strcmp(yytext, ",")) return COMMA;
+    if(strcmp(yytext, ";")) return END_LINE;
 }
 
 "\n" {
-    line++;
+    yylineno++;
     //printf("line is: %i\n", line);
     return 50;
 }
@@ -166,7 +134,7 @@ if|else|int|return|void|while {
 
 void addError(char * token){
     ERROR * new = malloc(sizeof(ERROR));
-    new->line = line + 1;
+    new->line = yylineno + 1;
     new->token = malloc(sizeof(token));
     strcpy(new->token, token);
     new->next = errors->errors;
@@ -186,22 +154,4 @@ void printErrors(){
     }
 
     printf("erros encontrados: %i\n", errors->cont);
-}
-
-int initLexer(char * program){
-
-    if(!(yyin = fopen(program, "r"))){
-        printf("Erro ao abrir o arquivo");
-        return 1;
-    }
-
-
-    errors = malloc(sizeof(ERRORS));
-    errors->errors = NULL;
-
-    while (yylex() != 0); //aparentemente o flex para a execução após achar um return nas regras
-
-    fclose(yyin);
-    return 0;
-
 }
