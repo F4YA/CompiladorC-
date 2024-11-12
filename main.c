@@ -1,18 +1,16 @@
+//Osvaldo Carvalho dos Santos Neto
+
 #include <stdio.h>
 #include "lex.yy.h"
+#include "parser.tab.h"
 
 int main(int argc, char ** argv)
 {
 
-    char * yytext;
+    //char * yytext;
 
     if (argc > 0)
-        return initLexer(argv[1]);
-
-    /*todo: resolver os problemas com os comentários
-     *todo: tabela de simbolos
-     *todo: erros de sintaxe
-     * */
+        return yyparse();
 
 }
 
